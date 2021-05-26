@@ -1,10 +1,9 @@
+#include <NTPClient.h>
 // change next line to use with another board/shield
-#include <WiFi.h>
-//#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 //#include <WiFi.h>
 //#include <WiFi101.h>
 #include <WiFiUdp.h>
-#include "NTPClient.h"
 
 WiFiUDP ntpUDP;
 NTPClient my_time_client(ntpUDP);
