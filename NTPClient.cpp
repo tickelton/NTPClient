@@ -19,7 +19,6 @@
  * SOFTWARE.
  */
 
-
 #include "NTPClient.h"
 
 NTPClient::NTPClient(UDP& udp) {
@@ -83,15 +82,19 @@ void NTPClient::begin(unsigned int port) {
 }
 
 bool NTPClient::forceUpdate() {
+  #ifdef DEBUG_NTPClient
+    Serial.println("Update from NTP Server");
+  #endif
+
   // flush any existing packets
   while(this->_udp->parsePacket() != 0)
     this->_udp->flush();
 
-  uint32_t tik,tok; //tik,tok to record wait time, replace timeout
+  uint32_t tik,tok; //tik,tok to record wait time
   this->sendNTPPacket();
   tik=millis();
   #ifdef DEBUG_NTPClient
-    Serial.println("sent ntp packet");
+    Serial.println("Sent ntp packet");
   #endif
 
   // Wait till data is there or timeout...

@@ -5,36 +5,18 @@
 //#include <WiFi101.h>
 #include <WiFiUdp.h>
 
-WiFiUDP ntpUDP;
-NTPClient my_time_client(ntpUDP);
+const char *ssid     = "<SSID>";
+const char *password = "<PASSWORD>";
 
-void connect_wifi(char * ssid,char * password){
-    Serial.print("wifi connecting...");
-    WiFi.begin(ssid,password);
-    while(WiFi.status()!= WL_CONNECTED){
-        delay(1000);
-        Serial.print(".");
-    }
-    
-    Serial.println("\nwifi connected!");
-    Serial.print("ip: ");
-    Serial.println(WiFi.localIP());
-    Serial.print("netmask: ");
-    Serial.println(WiFi.subnetMask());
-    Serial.print("gateway: ");
-    Serial.println(WiFi.gatewayIP());
-    Serial.print("channel: ");
-    Serial.println(WiFi.channel());
-    Serial.print("auto-reconnect: ");
-    Serial.println(WiFi.getAutoReconnect());
-}
+WiFiUDP ntpUDP;
+
+// You can specify the time server pool and the offset (in seconds, can be
+// changed later with setTimeOffset() ). Additionally you can specify the
+// update interval (in milliseconds, can be changed using setUpdateInterval() ).
+NTPClient my_time_client(ntpUDP, "europe.pool.ntp.org", 28800, 20000);
 
 inline void sync_time(){
     my_time_client.begin();
-    my_time_client.setTimeOffset(28800);
-    my_time_client.setUpdateInterval(20000);
-    //my_time_client.setPoolServerName("0.ubuntu.pool.ntp.org");
-    my_time_client.setPoolServerName("192.168.1.200");
     //smaller timeout will give you more accuracy 
     //but also larger possibility to fail 
     my_time_client.setTimeout(800); 
@@ -50,13 +32,15 @@ inline void sync_time(){
 }
 
 void setup(){
-    Serial.begin(230400);
-    Serial.println("serial inited");
+  Serial.begin(115200);
 
-    connect_wifi((char *)"ssid",(char *)"pwd");
-    sync_time();
+  WiFi.begin(ssid, password);
+  while ( WiFi.status() != WL_CONNECTED ) {
+    delay ( 500 );
+    Serial.print ( "." );
+  }
+  sync_time();
 
-    Serial.println("ready!");
 }
 
 String s_last_time="s_last_time";
@@ -87,7 +71,5 @@ void loop(){
         }
     }
 
-    //float ms=my_time_client.get_millis();
-    
     delay(1);
 }
