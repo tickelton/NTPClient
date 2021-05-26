@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 
+
 #include "NTPClient.h"
 
 NTPClient::NTPClient(UDP& udp) {
